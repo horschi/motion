@@ -99,6 +99,7 @@ struct config {
     char *on_event_end;
     const char *mask_file;
     int smart_mask_speed;
+    int mask_correction_percent;
     int sql_log_image;
     int sql_log_snapshot;
     int sql_log_movie;

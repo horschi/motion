@@ -118,6 +118,7 @@ struct config conf_template = {
     on_event_end:                   NULL,
     mask_file:                      NULL,
     smart_mask_speed:               0,
+    mask_correction_percent:        0,
 #if defined(HAVE_MYSQL) || defined(HAVE_PGSQL) || defined(HAVE_SQLITE3)
     sql_log_image:                  1,
     sql_log_snapshot:               1,
@@ -560,6 +561,15 @@ config_param config_params[] = {
     "# Adjust speed of mask changes from 0 (off) to 10 (fast)",
     0,
     CONF_OFFSET(smart_mask_speed),
+    copy_int,
+    print_int
+    },
+    {
+    "mask_correction_percent",
+    "# Reduce changed pixel count by the amount of masked pixels (default: 0)\n"
+    "# Adjust the factor in percent from 0 (off) to 200 (every masked pixel change need two actual pixel changes)",
+    0,
+    CONF_OFFSET(mask_correction_percent),
     copy_int,
     print_int
     },

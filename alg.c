@@ -952,6 +952,8 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
     memset(out, 0, i);
 
 #ifdef HAVE_MMX
+    if(!mask || cnt->conf.mask_correction_percent <= 0) // there is no optimized version of mask_correction_percent
+    {
     /* 
      * NOTE: The Pentium has two instruction pipes: U and V. I have grouped MMX
      * instructions in pairs according to how I think they will be scheduled in 
@@ -1151,7 +1153,7 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
     }
 
     emms();
-
+    }
 #endif
     /*
      * Note that the non-MMX code is present even if the MMX code is present.
@@ -1159,11 +1161,20 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
      * case the non-MMX code needs to take care of the remaining pixels.
      */
 
+    int maskdiffs = 0;
+    int maskcorrection = cnt->conf.mask_correction_percent;
     for (; i > 0; i--) {
         register unsigned char curdiff = (int)(abs(*ref - *new)); /* Using a temp variable is 12% faster. */
         /* Apply fixed mask */
         if (mask)
-            curdiff = ((int)(curdiff * *mask++) / 255);
+        {
+            unsigned char correcteddiff = ((int)(curdiff * *mask++) / 255);
+            if(maskcorrection > 0 && correcteddiff < noise && curdiff > noise)
+            {
+                maskdiffs++;
+            }
+            curdiff = correcteddiff;
+        }
             
         if (smartmask_speed) {
             if (curdiff > noise) {
@@ -1192,7 +1203,7 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
         ref++;
         new++;
     }
-    return diffs;
+    return diffs - ((maskdiffs * maskcorrection) / 100);
 }
 
 /**
