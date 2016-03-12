@@ -1204,11 +1204,11 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
         new++;
     }
 
-	maskdiffs = ((maskdiffs * maskcorrection) / 100);
-	if(maskdiffs > 0)
-	{
-    	MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO, "%s: %i changed pixels reduced by %i due to mask", diffs, maskdiffs);
-	}
+    maskdiffs = ((maskdiffs * maskcorrection) / 100);
+    if(maskdiffs > 0)
+    {
+        MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO, "%s: %i changed pixels reduced by %i due to mask", diffs, maskdiffs);
+    }
     return diffs - maskdiffs;
 }
 
