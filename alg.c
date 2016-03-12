@@ -182,7 +182,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
         int width_miny = width * cent->miny;
         int width_maxy = width * cent->maxy;
 
-        for (x = cent->minx; x <= cent->maxx; x+=2) {
+        for (x = cent->minx; x <= cent->maxx; x+=4) {
             int width_miny_x = x + width_miny;
             int width_maxy_x = x + width_maxy;
 
@@ -190,7 +190,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
             out[width_maxy_x] =~out[width_maxy_x];
         }
 
-        for (y = cent->miny; y <= cent->maxy; y+=2) {
+        for (y = cent->miny; y <= cent->maxy; y+=4) {
             int width_minx_y = cent->minx + y * width; 
             int width_maxx_y = cent->maxx + y * width;
 
@@ -202,7 +202,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
         int width_miny = width * cent->miny;
         int width_maxy = width * cent->maxy;
 
-        for (x = cent->minx; x <= cent->maxx; x+=2) {
+        for (x = cent->minx; x <= cent->maxx; x+=4) {
             int width_miny_x = x + width_miny;
             int width_maxy_x = x + width_maxy;
 
@@ -210,7 +210,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
             new[width_maxy_x] =~new[width_maxy_x];
         }
 
-        for (y = cent->miny; y <= cent->maxy; y+=2) {
+        for (y = cent->miny; y <= cent->maxy; y+=4) {
             int width_minx_y = cent->minx + y * width; 
             int width_maxx_y = cent->maxx + y * width;
 
@@ -220,12 +220,12 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
     } else if (style == LOCATE_CROSS) { /* Draw a cross on normal images. */
         int centy = cent->y * width;
 
-        for (x = cent->x - 10;  x <= cent->x + 10; x++) {
+        for (x = cent->x - 10;  x <= cent->x + 10; x+=2) {
             new[centy + x] =~new[centy + x];
             out[centy + x] =~out[centy + x];
         }
 
-        for (y = cent->y - 10; y <= cent->y + 10; y++) {
+        for (y = cent->y - 10; y <= cent->y + 10; y+=2) {
             new[cent->x + y * width] =~new[cent->x + y * width];
             out[cent->x + y * width] =~out[cent->x + y * width];
         }       
@@ -387,7 +387,7 @@ void alg_noise_tune(struct context *cnt, unsigned char *new)
         sum /= count / 3;
     
     /* 5: safe, 4: regular, 3: more sensitive */
-    cnt->noise = 4 + (cnt->noise + sum) / 2;
+    cnt->noise = 5 + (cnt->noise + sum) / 2;
 }
 
 /**
@@ -1203,8 +1203,6 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
         ref++;
         new++;
     }
-    MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO, "%s: Thread %d started , motion detection %s", 
-               (unsigned long)pthread_getspecific(tls_key_threadnr), cnt->pause ? "Disabled":"Enabled");
 
 	maskdiffs = ((maskdiffs * maskcorrection) / 100);
 	if(maskdiffs > 0)
