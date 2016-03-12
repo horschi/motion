@@ -1101,6 +1101,7 @@ static void *motion_loop(void *arg)
     int minimum_frame_time_downcounter = cnt->conf.minimum_frame_time; /* time in seconds to skip between capturing images */
     unsigned int get_image = 1;    /* Flag used to signal that we capture new image when we run the loop */
     struct image_data *old_image;
+    int startupframes = 50;
 
     /* 
      * Next two variables are used for snapshot and timelapse feature
@@ -1513,6 +1514,7 @@ static void *motion_loop(void *arg)
                     else
                         cnt->current_image->diffs = alg_diff(cnt, cnt->imgs.image_virgin);
 
+
                     /* Lightswitch feature - has light intensity changed?
                      * This can happen due to change of light conditions or due to a sudden change of the camera
                      * sensitivity. If alg_lightswitch detects lightswitch we suspend motion detection the next
@@ -1551,6 +1553,13 @@ static void *motion_loop(void *arg)
                         }
                     }
 
+                    // ignore the first frames after startup
+                    if(startupframes > 0)
+                    {
+                        startupframes --;
+                        cnt->current_image->diffs = 0;
+                    }
+                    
                     /* 
                      * Despeckle feature
                      * First we run (as given by the despeckle_filter option iterations
