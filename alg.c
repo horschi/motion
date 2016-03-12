@@ -182,7 +182,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
         int width_miny = width * cent->miny;
         int width_maxy = width * cent->maxy;
 
-        for (x = cent->minx; x <= cent->maxx; x++) {
+        for (x = cent->minx; x <= cent->maxx; x+=2) {
             int width_miny_x = x + width_miny;
             int width_maxy_x = x + width_maxy;
 
@@ -190,7 +190,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
             out[width_maxy_x] =~out[width_maxy_x];
         }
 
-        for (y = cent->miny; y <= cent->maxy; y++) {
+        for (y = cent->miny; y <= cent->maxy; y+=2) {
             int width_minx_y = cent->minx + y * width; 
             int width_maxx_y = cent->maxx + y * width;
 
@@ -202,7 +202,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
         int width_miny = width * cent->miny;
         int width_maxy = width * cent->maxy;
 
-        for (x = cent->minx; x <= cent->maxx; x++) {
+        for (x = cent->minx; x <= cent->maxx; x+=2) {
             int width_miny_x = x + width_miny;
             int width_maxy_x = x + width_maxy;
 
@@ -210,7 +210,7 @@ void alg_draw_location(struct coord *cent, struct images *imgs, int width, unsig
             new[width_maxy_x] =~new[width_maxy_x];
         }
 
-        for (y = cent->miny; y <= cent->maxy; y++) {
+        for (y = cent->miny; y <= cent->maxy; y+=2) {
             int width_minx_y = cent->minx + y * width; 
             int width_maxx_y = cent->maxx + y * width;
 
@@ -257,7 +257,7 @@ void alg_draw_red_location(struct coord *cent, struct images *imgs, int width, u
         int width_miny = width * cent->miny;
         int width_maxy = width * cent->maxy;
 
-        for (x = cent->minx; x <= cent->maxx; x++) {
+        for (x = cent->minx; x <= cent->maxx; x+=2) {
             int width_miny_x = x + width_miny;
             int width_maxy_x = x + width_maxy;
 
@@ -265,7 +265,7 @@ void alg_draw_red_location(struct coord *cent, struct images *imgs, int width, u
             out[width_maxy_x] =~out[width_maxy_x];
         }
 
-        for (y = cent->miny; y <= cent->maxy; y++) {
+        for (y = cent->miny; y <= cent->maxy; y+=2) {
             int width_minx_y = cent->minx + y * width; 
             int width_maxx_y = cent->maxx + y * width;
 
@@ -1203,7 +1203,15 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
         ref++;
         new++;
     }
-    return diffs - ((maskdiffs * maskcorrection) / 100);
+    MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO, "%s: Thread %d started , motion detection %s", 
+               (unsigned long)pthread_getspecific(tls_key_threadnr), cnt->pause ? "Disabled":"Enabled");
+
+	maskdiffs = ((maskdiffs * maskcorrection) / 100);
+	if(maskdiffs > 0)
+	{
+    	MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO, "%s: %i changed pixels reduced by %i due to mask", diffs, maskdiffs);
+	}
+    return diffs - maskdiffs;
 }
 
 /**
