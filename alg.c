@@ -947,7 +947,7 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
     
     int width = imgs->width;
     int height = imgs->height;
-    //int i = imgs->motionsize;
+    int i = imgs->motionsize;
      memset(out + i, 128, i / 2); /* WTF? Motion pictures are now b/w i.o. green */
     /* 
      * Keeping this memset in the MMX case when zeroes are necessarily 
