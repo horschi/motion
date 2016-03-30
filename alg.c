@@ -374,7 +374,7 @@ void alg_noise_tune(struct context *cnt, unsigned char *new)
         if (mask)
         {
             if(maskcorrection > 0)
-                diff += ((diff * maskcorrection (255-*mask++)) / (255*100));
+                diff += ((diff * maskcorrection * (255-*mask++)) / (255*100));
             else
                 diff = ((diff * *mask++) / 255);
         }
