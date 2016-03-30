@@ -948,13 +948,13 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
     int width = imgs->width;
     int height = imgs->height;
     //int i = imgs->motionsize;
-    // memset(out + i, 128, i / 2); /* WTF? Motion pictures are now b/w i.o. green */
+     memset(out + i, 128, i / 2); /* WTF? Motion pictures are now b/w i.o. green */
     /* 
      * Keeping this memset in the MMX case when zeroes are necessarily 
      * written anyway seems to be beneficial in terms of speed. Perhaps a
      * cache thing?
      */
-    //memset(out, 0, i);
+    memset(out, 0, i);
 
     int maskdiffs = 0;
     int maskcorrection = cnt->conf.mask_correction_percent;
