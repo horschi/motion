@@ -364,7 +364,8 @@ void alg_noise_tune(struct context *cnt, unsigned char *new)
     int diff, sum = 0, count = 0;
     unsigned char *mask = imgs->mask;
     unsigned char *smartmask = imgs->smartmask_final;
-
+    int maskcorrection = cnt->conf.mask_correction_percent;
+    
     i = imgs->motionsize;
             
     for (; i > 0; i--) {
