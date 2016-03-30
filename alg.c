@@ -966,7 +966,7 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
             unsigned char curdiff = 255;
             for (yd=y-1; yd <= y+1; yd++)
             {
-                unsigned char *refrow = ref+(yd*width);
+                unsigned char *refrow = ref+x-1+(yd*width);
                 for (xd=x-1; xd <= x+1; xd++)
                 {
                     char tdiff = (int)(abs(*refrow - *new));
