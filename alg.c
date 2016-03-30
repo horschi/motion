@@ -947,32 +947,33 @@ int alg_diff_standard(struct context *cnt, unsigned char *new)
     
     int width = imgs->width;
     int height = imgs->height;
-    int i = imgs->motionsize;
-     memset(out + i, 128, i / 2); /* WTF? Motion pictures are now b/w i.o. green */
-    /* 
-     * Keeping this memset in the MMX case when zeroes are necessarily 
-     * written anyway seems to be beneficial in terms of speed. Perhaps a
-     * cache thing?
-     */
-    memset(out, 0, i);
+    // int i = imgs->motionsize;
+    // memset(out + i, 128, i / 2); /* WTF? Motion pictures are now b/w i.o. green */
+    // memset(out, 0, i);
 
     int maskdiffs = 0;
     int maskcorrection = cnt->conf.mask_correction_percent;
     int x,y,xd,yd;
-    for (y=1; y < height-1; y++)
+    for (y=0; y < height; y++)
     {
-        for (x=1; x < width-1; x++)
+        for (x=0; x < width; x++)
         {
-            unsigned char curdiff = 255;
-            for (yd=y-1; yd <= y+1; yd++)
+            unsigned char curdiff;
+            if(x < 1 || y < 1 || x >= width || y >= height)
+                curdiff = 0;
+            else
             {
-                unsigned char *refrow = ref+x-1+(yd*width);
-                for (xd=x-1; xd <= x+1; xd++)
+                curdiff = 255;
+                for (yd=y-1; yd <= y+1; yd++)
                 {
-                    char tdiff = (int)(abs(*refrow - *new));
-                    if(tdiff < curdiff)
-                        curdiff = tdiff;
-                    refrow++;
+                    unsigned char *refrow = ref+x-1+(yd*width);
+                    for (xd=x-1; xd <= x+1; xd++)
+                    {
+                        unsigned char tdiff = (int)(abs(*refrow - *new));
+                        if(tdiff < curdiff)
+                            curdiff = tdiff;
+                        refrow++;
+                    }
                 }
             }
 
